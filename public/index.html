@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Client Info | IP Geolocation</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
+</head>
+<body>
+    <div class="container">
+        <header class="animate__animated animate__fadeInDown">
+            <div class="logo">
+                <i class="fas fa-globe-americas"></i>
+                <h1>Client Information System</h1>
+            </div>
+            <p class="tagline">Powered by findmyip.net API</p>
+        </header>
+
+        <main>
+            <div class="card form-card animate__animated animate__fadeIn">
+                <h2><i class="fas fa-user-edit"></i> Enter Your Details</h2>
+                <form id="clientForm">
+                    <div class="form-group">
+                        <div class="input-icon">
+                            <i class="fas fa-user"></i>
+                            <input type="text" id="name" placeholder="Your Full Name" required>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <div class="input-icon">
+                            <i class="fas fa-birthday-cake"></i>
+                            <input type="number" id="age" placeholder="Your Age" min="1" max="120" required>
+                        </div>
+                    </div>
+
+                    <button type="submit" class="btn-primary">
+                        <i class="fas fa-search-location"></i> Discover My Info
+                    </button>
+                </form>
+            </div>
+
+            <div class="card result-card animate__animated animate__fadeIn" id="resultContainer" style="display: none;">
+                <h2><i class="fas fa-info-circle"></i> Your Information</h2>
+
+                <div class="loading" id="loading">
+                    <div class="spinner">
+                        <div class="double-bounce1"></div>
+                        <div class="double-bounce2"></div>
+                    </div>
+                    <p>Fetching your information from findmyip.net...</p>
+                    <div class="api-badge">
+                        <i class="fas fa-satellite-dish"></i> Using findmyip.net API
+                    </div>
+                </div>
+
+                <div class="results" id="results" style="display: none;">
+                    <div class="info-section">
+                        <h3><i class="fas fa-user-tie"></i> Personal Info</h3>
+                        <div class="info-grid">
+                            <div class="info-item">
+                                <span class="label">Name</span>
+                                <span class="value" id="info-name">-</span>
+                            </div>
+                            <div class="info-item">
+                                <span class="label">Age</span>
+                                <span class="value" id="info-age">-</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="info-section">
+                        <h3><i class="fas fa-network-wired"></i> Network Info</h3>
+                        <div class="info-grid">
+                            <div class="info-item highlight">
+                                <span class="label">IP Address</span>
+                                <span class="value ip-address" id="info-ip">
+                                    <span id="ip-text">-</span>
+                                    <button class="copy-btn" onclick="copyToClipboard('ip-text')">
+                                        <i class="fas fa-copy"></i>
+                                    </button>
+                                </span>
+                            </div>
+                            <div class="info-item">
+                                <span class="label">Public IP</span>
+                                <span class="value" id="info-public-ip">-</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="info-section">
+                        <h3><i class="fas fa-map-marked-alt"></i> Location Info</h3>
+                        <div class="info-grid">
+                            <div class="info-item">
+                                <span class="label">Country</span>
+                                <span class="value flag" id="info-country">-</span>
+                            </div>
+                            <div class="info-item">
+                                <span class="label">City</span>
+                                <span class="value" id="info-city">-</span>
+                            </div>
+                            <div class="info-item">
+                                <span class="label">Continent</span>
+                                <span class="value" id="info-continent">-</span>
+                            </div>
+                            <div class="info-item">
+                                <span class="label">Currency</span>
+                                <span class="value" id="info-currency">-</span>
+                            </div>
+                            <div class="info-item">
+                                <span class="label">Timezone</span>
+                                <span class="value" id="info-timezone">-</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="info-section">
+                        <h3><i class="fas fa-laptop"></i> Device Info</h3>
+                        <div class="info-grid">
+                            <div class="info-item">
+                                <span class="label">Device Type</span>
+                                <span class="value" id="info-device">-</span>
+                            </div>
+                            <div class="info-item">
+                                <span class="label">Browser</span>
+                                <span class="value" id="info-browser">-</span>
+                            </div>
+                            <div class="info-item">
+                                <span class="label">Operating System</span>
+                                <span class="value" id="info-os">-</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="timestamp">
+                        <i class="fas fa-clock"></i>
+                        Last updated: <span id="info-time">-</span>
+                    </div>
+                </div>
+
+                <div class="error-message" id="errorMessage" style="display: none;">
+                    <i class="fas fa-exclamation-triangle"></i>
+                    <p id="errorText"></p>
+                </div>
+
+                <div class="actions">
+                    <button class="btn-secondary" onclick="resetForm()">
+                        <i class="fas fa-redo"></i> Check Again
+                    </button>
+                    <button class="btn-primary" onclick="shareInfo()">
+                        <i class="fas fa-share-alt"></i> Share Info
+                    </button>
+                </div>
+            </div>
+        </main>
+
+        <footer class="animate__animated animate__fadeInUp">
+            <div class="footer-content">
+                <div class="api-credit">
+                    <i class="fas fa-code"></i>
+                    Powered by <a href="https://findmyip.net" target="_blank">findmyip.net API</a>
+                </div>
+                <div class="disclaimer">
+                    <i class="fas fa-info-circle"></i>
+                    Location data is based on IP address and approximate
+                </div>
+                <div class="status" id="apiStatus">
+                    <i class="fas fa-circle"></i>
+                    <span>API Status: Ready</span>
+                </div>
+            </div>
+        </footer>
+    </div>
+
+    <div class="notification" id="notification">
+        <span id="notificationText"></span>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
